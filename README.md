@@ -26,7 +26,7 @@ For a different class of tasks, you start a new stem agent.
 
 ```bash
 # 1. Clone / unzip the project
-cd stem-agent
+cd stem-agent-jetbrains-challenge-main
 
 # 2. Install dependencies (only one: openai)
 pip install -r requirements.txt
@@ -55,7 +55,7 @@ python demo.py --eval --all > run_final.log 2>&1   # All three task classes
 ## Project Structure
 
 ```
-stem-agent/
+stem-agent-jetbrains-challenge-main/
 ├── src/
 │   └── stem_agent.py        # Core: StemAgent class + 4 phases
 ├── evals/
