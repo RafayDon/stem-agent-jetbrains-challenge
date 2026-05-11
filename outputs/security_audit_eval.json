@@ -1,0 +1,40 @@
+{
+  "task_class": "Security Audit",
+  "baseline_avg": 0.71,
+  "stem_avg": 0.72,
+  "delta": 0.010000000000000009,
+  "pct_change": 1.4084507022416202,
+  "val_score": 0.80125,
+  "generalization_gap": 0.08125000000000004,
+  "patch_rounds": 1,
+  "improvement_history": [
+    {
+      "round": 0,
+      "score": 0.6825,
+      "critique": "Judge checklist incomplete/malformed; score capped",
+      "baseline": 0.746875
+    },
+    {
+      "round": 1,
+      "score": 0.80125,
+      "critique": "Output is cut off before completing the implementation section, particularly after 'os.makedirs(safe_upload_dir,'.",
+      "baseline": 0.746875
+    }
+  ],
+  "baseline_results": [
+    {
+      "task_id": "auth_endpoint_prose",
+      "score": 0.71,
+      "critique": "Lack of a concrete recommendation with explicit justification."
+    }
+  ],
+  "stem_results": [
+    {
+      "task_id": "auth_endpoint_prose",
+      "score": 0.72,
+      "critique": "Lack of clear concrete recommendations linking back to rationale."
+    }
+  ],
+  "judge_model": "gpt-4o-mini",
+  "rubric": "SHARED_RUBRIC"
+}

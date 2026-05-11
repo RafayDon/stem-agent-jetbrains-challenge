@@ -1,0 +1,144 @@
+[
+  {
+    "task_class": "Code Review",
+    "baseline_avg": 0.88,
+    "stem_avg": 0.86,
+    "delta": -0.020000000000000018,
+    "pct_change": -2.2727272701446304,
+    "val_score": 0.8899999999999999,
+    "generalization_gap": 0.029999999999999916,
+    "patch_rounds": 1,
+    "improvement_history": [
+      {
+        "round": 0,
+        "score": 0.825,
+        "critique": "Missing specific recommendation despite providing a lot of relevant context.",
+        "baseline": 0.8125
+      },
+      {
+        "round": 1,
+        "score": 0.8899999999999999,
+        "critique": "Missing explicit references to paper labels in groundedness assessment.",
+        "baseline": 0.8125
+      }
+    ],
+    "baseline_results": [
+      {
+        "task_id": "py_get_user",
+        "score": 0.835,
+        "critique": "Groundedness is affected by the absence of specific paper labels or numbers."
+      },
+      {
+        "task_id": "js_fetch_loop",
+        "score": 0.925,
+        "critique": "Missing a citation for synthesis tasks, which affected groundedness score."
+      }
+    ],
+    "stem_results": [
+      {
+        "task_id": "py_get_user",
+        "score": 0.87,
+        "critique": "Lacks citation of synthesis-related elements, impacting groundedness."
+      },
+      {
+        "task_id": "js_fetch_loop",
+        "score": 0.85,
+        "critique": "Did not provide specific paper labels or numbers for synthesis, affecting groundedness score."
+      }
+    ],
+    "judge_model": "gpt-4o-mini",
+    "rubric": "SHARED_RUBRIC"
+  },
+  {
+    "task_class": "Security Audit",
+    "baseline_avg": 0.71,
+    "stem_avg": 0.72,
+    "delta": 0.010000000000000009,
+    "pct_change": 1.4084507022416202,
+    "val_score": 0.80125,
+    "generalization_gap": 0.08125000000000004,
+    "patch_rounds": 1,
+    "improvement_history": [
+      {
+        "round": 0,
+        "score": 0.6825,
+        "critique": "Judge checklist incomplete/malformed; score capped",
+        "baseline": 0.746875
+      },
+      {
+        "round": 1,
+        "score": 0.80125,
+        "critique": "Output is cut off before completing the implementation section, particularly after 'os.makedirs(safe_upload_dir,'.",
+        "baseline": 0.746875
+      }
+    ],
+    "baseline_results": [
+      {
+        "task_id": "auth_endpoint_prose",
+        "score": 0.71,
+        "critique": "Lack of a concrete recommendation with explicit justification."
+      }
+    ],
+    "stem_results": [
+      {
+        "task_id": "auth_endpoint_prose",
+        "score": 0.72,
+        "critique": "Lack of clear concrete recommendations linking back to rationale."
+      }
+    ],
+    "judge_model": "gpt-4o-mini",
+    "rubric": "SHARED_RUBRIC"
+  },
+  {
+    "task_class": "Research Synthesis",
+    "baseline_avg": 0.73,
+    "stem_avg": 0.72,
+    "delta": -0.010000000000000009,
+    "pct_change": -1.3698630118221067,
+    "val_score": 0.71775,
+    "generalization_gap": -0.0022499999999999742,
+    "patch_rounds": 3,
+    "improvement_history": [
+      {
+        "round": 0,
+        "score": 0.71775,
+        "critique": "Lack of specific variable references and grounding evidence.",
+        "baseline": 0.78
+      },
+      {
+        "round": 1,
+        "score": 0.74575,
+        "critique": "Missing code blocks and specific variable references diminish the depth of actionable advice.",
+        "baseline": 0.78
+      },
+      {
+        "round": 2,
+        "score": 0.68875,
+        "critique": "Lack of specific variable references and direct quotations to support claims.",
+        "baseline": 0.78
+      },
+      {
+        "round": 3,
+        "score": 0.7075,
+        "critique": "Missing specific variable names and actual code recommendations",
+        "baseline": 0.78
+      }
+    ],
+    "baseline_results": [
+      {
+        "task_id": "transformer_efficiency_eval",
+        "score": 0.73,
+        "critique": "Specific variable references missing from grounding of claims."
+      }
+    ],
+    "stem_results": [
+      {
+        "task_id": "transformer_efficiency_eval",
+        "score": 0.72,
+        "critique": "Specific variable references are missing, and there are no code blocks to enhance actionability."
+      }
+    ],
+    "judge_model": "gpt-4o-mini",
+    "rubric": "SHARED_RUBRIC"
+  }
+]

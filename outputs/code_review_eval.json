@@ -1,0 +1,50 @@
+{
+  "task_class": "Code Review",
+  "baseline_avg": 0.88,
+  "stem_avg": 0.86,
+  "delta": -0.020000000000000018,
+  "pct_change": -2.2727272701446304,
+  "val_score": 0.8899999999999999,
+  "generalization_gap": 0.029999999999999916,
+  "patch_rounds": 1,
+  "improvement_history": [
+    {
+      "round": 0,
+      "score": 0.825,
+      "critique": "Missing specific recommendation despite providing a lot of relevant context.",
+      "baseline": 0.8125
+    },
+    {
+      "round": 1,
+      "score": 0.8899999999999999,
+      "critique": "Missing explicit references to paper labels in groundedness assessment.",
+      "baseline": 0.8125
+    }
+  ],
+  "baseline_results": [
+    {
+      "task_id": "py_get_user",
+      "score": 0.835,
+      "critique": "Groundedness is affected by the absence of specific paper labels or numbers."
+    },
+    {
+      "task_id": "js_fetch_loop",
+      "score": 0.925,
+      "critique": "Missing a citation for synthesis tasks, which affected groundedness score."
+    }
+  ],
+  "stem_results": [
+    {
+      "task_id": "py_get_user",
+      "score": 0.87,
+      "critique": "Lacks citation of synthesis-related elements, impacting groundedness."
+    },
+    {
+      "task_id": "js_fetch_loop",
+      "score": 0.85,
+      "critique": "Did not provide specific paper labels or numbers for synthesis, affecting groundedness score."
+    }
+  ],
+  "judge_model": "gpt-4o-mini",
+  "rubric": "SHARED_RUBRIC"
+}

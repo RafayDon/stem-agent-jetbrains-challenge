@@ -1,0 +1,283 @@
+{
+  "task_class": "Research Synthesis",
+  "state": "specialized",
+  "blueprint": {
+    "task_class": "Research Synthesis",
+    "core_challenge": "Integrating diverse, sometimes conflicting, technical findings into a clear, comprehensive, and accurate overview requires discerning key contributions and resolving ambiguities across multiple sources.",
+    "typical_workflow": [
+      "Clarify the synthesis scope and define key dimensions or comparison criteria.",
+      "Systematically collect and select relevant papers or sources.",
+      "Extract salient details (methods, results, trade-offs) from each source.",
+      "Organize and compare findings along predefined dimensions, resolving inconsistencies.",
+      "Compose an integrated summary or structured comparison, highlighting trends, gaps, and actionable insights."
+    ],
+    "common_failure_modes": [
+      "Overlooking seminal or recent work due to incomplete literature search.",
+      "Superficially summarizing without critical comparison or nuance.",
+      "Merging incompatible methods or results without resolving conflicts."
+    ],
+    "primary_deliverable": "Structured comparison table with concise synthesized commentary on methods, results, and trade-offs.",
+    "output_criteria": [
+      "Coverage of all relevant, recent, and seminal sources.",
+      "Clear organization by method, result, and trade-off dimensions.",
+      "Explicitly stated limitations, controversies, or open questions."
+    ],
+    "recommended_architecture": {
+      "pattern": "iterative",
+      "rationale": "Iterative refinement enables deeper coverage and critical integration as new sources or insights emerge.",
+      "num_steps": 5,
+      "use_tools": true,
+      "self_critique": true
+    },
+    "specialized_system_prompt_theme": "Rigorous, analytically-minded researcher synthesizing for peers seeking authoritative, practical understanding.",
+    "what_separates_good_from_great": "Expert synthesis adds explicit critical insight: not just collating facts but revealing hidden assumptions, resolving debates, and identifying real-world implications."
+  },
+  "architecture": {
+    "agent_name": "SynthesisTable Pro",
+    "system_prompt": "You are SynthesisTable Pro, an expert research integrator with deep domain knowledge and experience synthesizing technical findings for advanced practitioners and researchers. Your role is to deliver the gold standard in research synthesis by producing a Structured comparison table with concise synthesized commentary on methods, results, and trade-offs. This table, accompanied by precise, insightful commentary, is your PRIMARY DELIVERABLE, and it must appear FIRST \u2014 before any explanation or process description. Do not narrate your steps, reason about your process, or include a plan prior to delivering the table and commentary. You integrate evidence rigorously, resolve ambiguities, and clearly identify controversies, limitations, trends, and actionable insights. Your deliverable should illuminate nuanced distinctions, reveal implicit assumptions, and make clear recommendations for researchers and practitioners based on authoritative comparison. Your communication style is precise, analytical, and structured, optimized for an informed audience seeking both breadth and critical depth.",
+    "reasoning_protocol": [
+      {
+        "step": 1,
+        "name": "Structured Comparison Table Synthesis",
+        "instruction": "Without any preamble or process narration, produce the complete Structured comparison table with concise synthesized commentary on methods, results, and trade-offs. Cite variable names, paper identifiers, or relevant jargon from the input. The deliverable must include all required sections\u2014table and commentary. Do NOT scope, plan, or narrate; PRODUCE THE DELIVERABLE.",
+        "output_format": "Structured comparison table containing: columns for (1) Method/Source, (2) Key Approach/Variables, (3) Main Results, (4) Trade-offs/Limitations. Follow this with a concise synthesized commentary addressing: trends, gaps, controversies, and actionable recommendations, with explicit citations to sources or techniques."
+      },
+      {
+        "step": 2,
+        "name": "Coverage and Conflict Check",
+        "instruction": "Check the comparison table for coverage of all relevant, recent, and seminal sources and ensure all major findings, including conflicting ones, are represented. If gaps or inconsistencies are found, iteratively retrieve missing details and update the table.",
+        "output_format": "Revised comparison table (if needed) + update log noting additions/corrections."
+      },
+      {
+        "step": 3,
+        "name": "Critical Integration",
+        "instruction": "Re-examine the synthesized commentary to critically integrate findings, clarify ambiguities, and explicitly note any unresolved controversies, open questions, or significant limitations. Make sure actionable implications for the field or for code implementation are clear.",
+        "output_format": "Improved, critically integrated commentary with explicit limitations, controversies, and actionable insights."
+      },
+      {
+        "step": 4,
+        "name": "Peer-level Quality Assurance",
+        "instruction": "Check all claims in the table and commentary are tightly grounded in input details (variable names, paper identifiers, technical terms) and address all key dimensions. Correct any section that is generic, vague, or lacks citation.",
+        "output_format": "Fully grounded and domain-specific final Structured comparison table and commentary."
+      },
+      {
+        "step": 5,
+        "name": "Output Alignment and Self-Critique",
+        "instruction": "Assess the final deliverable against output criteria: completeness, actionability, and groundedness as defined in the rubric. Fix any issues and finalize.",
+        "output_format": "Final Structured comparison table with concise synthesized commentary, explicitly meeting all output criteria."
+      }
+    ],
+    "tools": [
+      {
+        "name": "ScholarlyRetriever",
+        "description": "Retrieve recent and seminal papers, with metadata and abstracts, for comprehensive literature coverage.",
+        "inputs": {
+          "search_query": "string"
+        },
+        "simulated": true
+      },
+      {
+        "name": "PaperSummarizer",
+        "description": "Extracts structured key details (methods, results, limitations, variables) from a cited paper.",
+        "inputs": {
+          "paper_id": "string"
+        },
+        "simulated": true
+      },
+      {
+        "name": "ConflictAnalyzer",
+        "description": "Identifies conflicting findings and helps resolve or highlight such conflicts with side-by-side evidence.",
+        "inputs": {
+          "method1": "string",
+          "method2": "string"
+        },
+        "simulated": true
+      }
+    ],
+    "self_evaluation_rubric": [
+      {
+        "criterion": "completeness",
+        "weight": 0.3,
+        "question": "Does the output address ALL explicitly requested outputs?",
+        "checklist": [
+          "Every requested section is present (table if asked, fixes if asked, recommendation if asked)",
+          "No major requested output type is entirely absent",
+          "Output is not cut off before completing a required section"
+        ],
+        "good_signal": "All requested sections present and non-empty",
+        "bad_signal": "Any requested output type is missing or truncated",
+        "cap_if_bad": 0.4
+      },
+      {
+        "criterion": "actionability",
+        "weight": 0.4,
+        "question": "Are the recommendations specific enough to act on without further research?",
+        "checklist": [
+          "Code fixes shown as actual code blocks (not described in prose only)",
+          "For security/review tasks: at least one corrected code block present",
+          "For synthesis tasks: a concrete recommendation with explicit justification present",
+          "Recommendations are specific, not 'use best practices'"
+        ],
+        "good_signal": "Reader can implement the fix or make the decision without needing anything else",
+        "bad_signal": "Advice is prose-only with no code, or says 'use parameterized queries' without showing how",
+        "cap_if_bad": 0.35
+      },
+      {
+        "criterion": "groundedness",
+        "weight": 0.3,
+        "question": "Is every claim tied to a specific detail from the task input?",
+        "checklist": [
+          "References specific variable names, function names, or line patterns from the input",
+          "For synthesis: cites specific paper labels (A/B/C) and their specific numbers",
+          "No generic advice that would apply to any task regardless of input"
+        ],
+        "good_signal": "Every finding points to something in the input by name",
+        "bad_signal": "Output could have been written without reading the specific input",
+        "cap_if_bad": 0.4
+      }
+    ],
+    "stopping_criterion": "When the Structured comparison table with concise synthesized commentary on methods, results, and trade-offs. is complete with concrete fixes/recommendations for every finding.",
+    "validation": {
+      "test_task_ids": [
+        "attention_mechanisms",
+        "rl_alignment",
+        "rag_methods",
+        "heldout::transformer_efficiency_eval"
+      ],
+      "avg_score": 0.71775,
+      "critique": "Lack of specific variable references and grounding evidence.",
+      "ready": false,
+      "threshold": 0.72,
+      "baseline_avg": 0.78,
+      "improvement_margin": 0.05,
+      "patch_rounds": 3,
+      "improvement_history": [
+        {
+          "round": 0,
+          "score": 0.71775,
+          "critique": "Lack of specific variable references and grounding evidence.",
+          "baseline": 0.78
+        },
+        {
+          "round": 1,
+          "score": 0.74575,
+          "critique": "Missing code blocks and specific variable references diminish the depth of actionable advice.",
+          "baseline": 0.78
+        },
+        {
+          "round": 2,
+          "score": 0.68875,
+          "critique": "Lack of specific variable references and direct quotations to support claims.",
+          "baseline": 0.78
+        },
+        {
+          "round": 3,
+          "score": 0.7075,
+          "critique": "Missing specific variable names and actual code recommendations",
+          "baseline": 0.78
+        }
+      ],
+      "judge_model": "gpt-4o-mini",
+      "rubric": "SHARED_RUBRIC"
+    }
+  },
+  "evolution_log": [
+    {
+      "phase": "start",
+      "timestamp": "17:11:05",
+      "data": {
+        "task_class": "Research Synthesis",
+        "n_examples": 3
+      }
+    },
+    {
+      "phase": "differentiation",
+      "timestamp": "17:11:10",
+      "data": {
+        "task_class": "Research Synthesis",
+        "core_challenge": "Integrating diverse, sometimes conflicting, technical findings into a clear, comprehensive, and accurate overview requires discerning key contributions and resolving ambiguities across multiple sources.",
+        "typical_workflow": [
+          "Clarify the synthesis scope and define key dimensions or comparison criteria.",
+          "Systematically collect and select relevant papers or sources.",
+          "Extract salient details (methods, results, trade-offs) from each source.",
+          "Organize and compare findings along predefined dimensions, resolving inconsistencies.",
+          "Compose an integrated summary or structured comparison, highlighting trends, gaps, and actionable insights."
+        ],
+        "common_failure_modes": [
+          "Overlooking seminal or recent work due to incomplete literature search.",
+          "Superficially summarizing without critical comparison or nuance.",
+          "Merging incompatible methods or results without resolving conflicts."
+        ],
+        "primary_deliverable": "Structured comparison table with concise synthesized commentary on methods, results, and trade-offs.",
+        "output_criteria": [
+          "Coverage of all relevant, recent, and seminal sources.",
+          "Clear organization by method, result, and trade-off dimensions.",
+          "Explicitly stated limitations, controversies, or open questions."
+        ],
+        "recommended_architecture": {
+          "pattern": "iterative",
+          "rationale": "Iterative refinement enables deeper coverage and critical integration as new sources or insights emerge.",
+          "num_steps": 5,
+          "use_tools": true,
+          "self_critique": true
+        },
+        "specialized_system_prompt_theme": "Rigorous, analytically-minded researcher synthesizing for peers seeking authoritative, practical understanding.",
+        "what_separates_good_from_great": "Expert synthesis adds explicit critical insight: not just collating facts but revealing hidden assumptions, resolving debates, and identifying real-world implications."
+      }
+    },
+    {
+      "phase": "morphogenesis",
+      "timestamp": "17:11:21",
+      "data": {
+        "agent_name": "SynthesisTable Pro"
+      }
+    },
+    {
+      "phase": "validation",
+      "timestamp": "17:18:09",
+      "data": {
+        "test_task_ids": [
+          "attention_mechanisms",
+          "rl_alignment",
+          "rag_methods",
+          "heldout::transformer_efficiency_eval"
+        ],
+        "avg_score": 0.71775,
+        "critique": "Lack of specific variable references and grounding evidence.",
+        "ready": false,
+        "threshold": 0.72,
+        "baseline_avg": 0.78,
+        "improvement_margin": 0.05,
+        "patch_rounds": 3,
+        "improvement_history": [
+          {
+            "round": 0,
+            "score": 0.71775,
+            "critique": "Lack of specific variable references and grounding evidence.",
+            "baseline": 0.78
+          },
+          {
+            "round": 1,
+            "score": 0.74575,
+            "critique": "Missing code blocks and specific variable references diminish the depth of actionable advice.",
+            "baseline": 0.78
+          },
+          {
+            "round": 2,
+            "score": 0.68875,
+            "critique": "Lack of specific variable references and direct quotations to support claims.",
+            "baseline": 0.78
+          },
+          {
+            "round": 3,
+            "score": 0.7075,
+            "critique": "Missing specific variable names and actual code recommendations",
+            "baseline": 0.78
+          }
+        ],
+        "judge_model": "gpt-4o-mini",
+        "rubric": "SHARED_RUBRIC"
+      }
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "task_class": "Code Review",
+  "state": "specialized",
+  "blueprint": {
+    "task_class": "Code Review",
+    "core_challenge": "Expert code review requires both deep domain knowledge and the ability to anticipate subtle, context-dependent flaws or vulnerabilities that are easily overlooked.",
+    "typical_workflow": [
+      "Comprehend the code's functional intent and execution context.",
+      "Systematically examine code for correctness, readability, and idiomatic style.",
+      "Assess edge cases, error handling, and test coverage.",
+      "Check for security issues, performance bottlenecks, and conformance to best practices.",
+      "Summarize findings, recommend improvements, and (optionally) validate fixes."
+    ],
+    "common_failure_modes": [
+      "Overlooking non-obvious logic or state bugs",
+      "Missing context-specific security issues (e.g., injection, race conditions)",
+      "Focusing on stylistic nits at the expense of critical flaws"
+    ],
+    "primary_deliverable": "A prioritized list of identified issues with concrete code-level recommendations",
+    "output_criteria": [
+      "Accuracy and specificity of issue identification",
+      "Clarity and actionability of recommendations",
+      "Coverage of correctness, security, and maintainability"
+    ],
+    "recommended_architecture": {
+      "pattern": "iterative",
+      "rationale": "Iterative analysis allows for layered scrutiny: initial broad review, then deep dives into risk areas, plus feedback loops to self-correct missed issues.",
+      "num_steps": 5,
+      "use_tools": true,
+      "self_critique": true
+    },
+    "specialized_system_prompt_theme": "Meticulous, impartial expert auditor with broad and deep technical knowledge and a focus on actionable risk reduction",
+    "what_separates_good_from_great": "Exceptional reviewers proactively uncover non-obvious or systemic issues and provide precise, context-aware guidance that measurably improves code quality."
+  },
+  "architecture": {
+    "agent_name": "ExpertCode Auditor",
+    "system_prompt": "You are ExpertCode Auditor, a meticulous and impartial expert code reviewer trusted across enterprise and open-source environments. You possess deep domain expertise in software engineering, security, and best practices spanning multiple languages and frameworks. Your primary deliverable is a prioritized list of identified issues with concrete code-level recommendations, referencing specific lines, variables, and patterns from the input code. This deliverable must appear BEFORE any mention of your analysis process, methodology, or workflow\u2013the list is always output first and in full. For every issue, show a corrected code block that addresses the recommendation. Each identified issue is prioritised by risk, correctness, security, and maintainability impact, and each recommendation is directly actionable, favoring code snippets or precise correction instructions. After the deliverable, you may internally iterate, use tools, and self-critique to ensure no critical aspect is missed, no vague recommendations are made, and every issue is referenced clearly and specifically. You never narrate your process ahead of the deliverable and you never omit a section of the required output.",
+    "reasoning_protocol": [
+      {
+        "step": 1,
+        "name": "Produce prioritized issue list with concrete recommendations and code-level fixes",
+        "instruction": "Without preamble, immediately output the full prioritized list of identified issues with concrete code-level recommendations. For every issue, cite the specific variable name, function name, or code pattern from the provided input. Show a corrected code block for every recommendation. Do NOT scope, plan, or narrate\u2014deliver the issue list and code blocks directly.",
+        "output_format": "The prioritized issue list, each entry including (a) specific code references, (b) actionable recommendations, and (c) corrected code blocks. The list appears as the first output, ordered by severity or urgency."
+      },
+      {
+        "step": 2,
+        "name": "Surface Edge Cases and Security Vulnerabilities",
+        "instruction": "Examine the code for non-obvious edge cases and security vulnerabilities, such as improper input handling, potential race conditions, or injection attacks. For each vulnerability, add a new entry to the existing issue list per Step 1 guidelines, and provide a corrected code block.",
+        "output_format": "Add newly discovered issues to the top of the existing prioritized list, each with a recommendation and corresponding code fix."
+      },
+      {
+        "step": 3,
+        "name": "Self-critique and finalize",
+        "instruction": "Review for any missing issues, vague advice, missing or incorrect code references, or absence of code fix blocks. Ensure every identified issue includes (a) a direct citation of affected code, (b) explicit, actionable recommendation, and (c) a code block with the corrected code. Only after completing the full, actionable deliverable, may further analysis or process be described.",
+        "output_format": "final"
+      }
+    ],
+    "tools": [
+      {
+        "name": "StaticAnalyzer",
+        "description": "Detects syntax errors, common bugs, and anti-patterns in the supplied code; returns a list of issue descriptions with line numbers and suggested code corrections.",
+        "inputs": {
+          "code": "string"
+        },
+        "simulated": true
+      },
+      {
+        "name": "SecurityScanner",
+        "description": "Analyzes code for security flaws, such as injection vulnerabilities, insecure data handling, and improper authorization; returns issue descriptions, affected lines, and secure coding suggestions.",
+        "inputs": {
+          "code": "string"
+        },
+        "simulated": true
+      },
+      {
+        "name": "StyleChecker",
+        "description": "Evaluates code style, readability, and conformance to user-specified or conventional idioms; returns a list of style warnings and exact code suggestions.",
+        "inputs": {
+          "code": "string"
+        },
+        "simulated": true
+      }
+    ],
+    "self_evaluation_rubric": [
+      {
+        "criterion": "completeness",
+        "weight": 0.3,
+        "question": "Does the output address ALL explicitly requested outputs?",
+        "checklist": [
+          "Every requested section is present (table if asked, fixes if asked, recommendation if asked)",
+          "No major requested output type is entirely absent",
+          "Output is not cut off before completing a required section"
+        ],
+        "good_signal": "All requested sections present and non-empty",
+        "bad_signal": "Any requested output type is missing or truncated",
+        "cap_if_bad": 0.4
+      },
+      {
+        "criterion": "actionability",
+        "weight": 0.4,
+        "question": "Are the recommendations specific enough to act on without further research?",
+        "checklist": [
+          "Code fixes shown as actual code blocks (not described in prose only)",
+          "For security/review tasks: at least one corrected code block present",
+          "For synthesis tasks: a concrete recommendation with explicit justification present",
+          "Recommendations are specific, not 'use best practices'"
+        ],
+        "good_signal": "Reader can implement the fix or make the decision without needing anything else",
+        "bad_signal": "Advice is prose-only with no code, or says 'use parameterized queries' without showing how",
+        "cap_if_bad": 0.35
+      },
+      {
+        "criterion": "groundedness",
+        "weight": 0.3,
+        "question": "Is every claim tied to a specific detail from the task input?",
+        "checklist": [
+          "References specific variable names, function names, or line patterns from the input",
+          "For synthesis: cites specific paper labels (A/B/C) and their specific numbers",
+          "No generic advice that would apply to any task regardless of input"
+        ],
+        "good_signal": "Every finding points to something in the input by name",
+        "bad_signal": "Output could have been written without reading the specific input",
+        "cap_if_bad": 0.4
+      }
+    ],
+    "stopping_criterion": "When the A prioritized list of identified issues with concrete code-level recommendations is complete with concrete fixes/recommendations for every finding.",
+    "validation": {
+      "test_task_ids": [
+        "py_second_largest",
+        "sql_injection_dual",
+        "async_race_js",
+        "heldout::py_get_user"
+      ],
+      "avg_score": 0.8899999999999999,
+      "critique": "Missing explicit references to paper labels in groundedness assessment.",
+      "ready": true,
+      "threshold": 0.72,
+      "baseline_avg": 0.8125,
+      "improvement_margin": 0.05,
+      "patch_rounds": 1,
+      "improvement_history": [
+        {
+          "round": 0,
+          "score": 0.825,
+          "critique": "Missing specific recommendation despite providing a lot of relevant context.",
+          "baseline": 0.8125
+        },
+        {
+          "round": 1,
+          "score": 0.8899999999999999,
+          "critique": "Missing explicit references to paper labels in groundedness assessment.",
+          "baseline": 0.8125
+        }
+      ],
+      "judge_model": "gpt-4o-mini",
+      "rubric": "SHARED_RUBRIC"
+    }
+  },
+  "evolution_log": [
+    {
+      "phase": "start",
+      "timestamp": "16:58:08",
+      "data": {
+        "task_class": "Code Review",
+        "n_examples": 3
+      }
+    },
+    {
+      "phase": "differentiation",
+      "timestamp": "16:58:13",
+      "data": {
+        "task_class": "Code Review",
+        "core_challenge": "Expert code review requires both deep domain knowledge and the ability to anticipate subtle, context-dependent flaws or vulnerabilities that are easily overlooked.",
+        "typical_workflow": [
+          "Comprehend the code's functional intent and execution context.",
+          "Systematically examine code for correctness, readability, and idiomatic style.",
+          "Assess edge cases, error handling, and test coverage.",
+          "Check for security issues, performance bottlenecks, and conformance to best practices.",
+          "Summarize findings, recommend improvements, and (optionally) validate fixes."
+        ],
+        "common_failure_modes": [
+          "Overlooking non-obvious logic or state bugs",
+          "Missing context-specific security issues (e.g., injection, race conditions)",
+          "Focusing on stylistic nits at the expense of critical flaws"
+        ],
+        "primary_deliverable": "A prioritized list of identified issues with concrete code-level recommendations",
+        "output_criteria": [
+          "Accuracy and specificity of issue identification",
+          "Clarity and actionability of recommendations",
+          "Coverage of correctness, security, and maintainability"
+        ],
+        "recommended_architecture": {
+          "pattern": "iterative",
+          "rationale": "Iterative analysis allows for layered scrutiny: initial broad review, then deep dives into risk areas, plus feedback loops to self-correct missed issues.",
+          "num_steps": 5,
+          "use_tools": true,
+          "self_critique": true
+        },
+        "specialized_system_prompt_theme": "Meticulous, impartial expert auditor with broad and deep technical knowledge and a focus on actionable risk reduction",
+        "what_separates_good_from_great": "Exceptional reviewers proactively uncover non-obvious or systemic issues and provide precise, context-aware guidance that measurably improves code quality."
+      }
+    },
+    {
+      "phase": "morphogenesis",
+      "timestamp": "16:58:30",
+      "data": {
+        "agent_name": "ExpertCode Auditor"
+      }
+    },
+    {
+      "phase": "validation",
+      "timestamp": "17:02:37",
+      "data": {
+        "test_task_ids": [
+          "py_second_largest",
+          "sql_injection_dual",
+          "async_race_js",
+          "heldout::py_get_user"
+        ],
+        "avg_score": 0.8899999999999999,
+        "critique": "Missing explicit references to paper labels in groundedness assessment.",
+        "ready": true,
+        "threshold": 0.72,
+        "baseline_avg": 0.8125,
+        "improvement_margin": 0.05,
+        "patch_rounds": 1,
+        "improvement_history": [
+          {
+            "round": 0,
+            "score": 0.825,
+            "critique": "Missing specific recommendation despite providing a lot of relevant context.",
+            "baseline": 0.8125
+          },
+          {
+            "round": 1,
+            "score": 0.8899999999999999,
+            "critique": "Missing explicit references to paper labels in groundedness assessment.",
+            "baseline": 0.8125
+          }
+        ],
+        "judge_model": "gpt-4o-mini",
+        "rubric": "SHARED_RUBRIC"
+      }
+    }
+  ]
+}
